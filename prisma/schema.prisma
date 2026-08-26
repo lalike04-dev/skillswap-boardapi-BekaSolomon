@@ -13,7 +13,7 @@ model listings {
   title       String      @db.VarChar(255)
   description String
   skillid     Int
-  list_type   String      @db.VarChar(100)
+  list_type   listing_type     
   skills      skills      @relation(fields: [skillid], references: [id], onDelete: NoAction, onUpdate: NoAction)
   responses   responses[]
 }
@@ -31,13 +31,19 @@ model responses {
 
 model skills {
   id          Int        @id @default(autoincrement())
+  name        String     @unique
   description String     @db.VarChar(255)
   listings    listings[]
 }
 
 model users {
   id        Int         @id @default(autoincrement())
-  name      String?     @db.VarChar(100)
-  email     String?     @db.VarChar(255)
+  name      String     @db.VarChar(100)
+  email     String      @unique @db.VarChar(255)
   responses responses[]
+}
+
+enum listing_type{
+  Offering
+  Recieving
 }
