@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -11,5 +5,39 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model listings {
+  id          Int         @id @default(autoincrement())
+  title       String      @db.VarChar(255)
+  description String
+  skillid     Int
+  list_type   String      @db.VarChar(100)
+  skills      skills      @relation(fields: [skillid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  responses   responses[]
+}
+
+model responses {
+  userid    Int
+  listingid Int
+  response  String
+  accepted  Boolean? @default(false)
+  listings  listings @relation(fields: [listingid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users     users    @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userid, listingid])
+}
+
+model skills {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  listings    listings[]
+}
+
+model users {
+  id        Int         @id @default(autoincrement())
+  name      String?     @db.VarChar(100)
+  email     String?     @db.VarChar(255)
+  responses responses[]
 }
