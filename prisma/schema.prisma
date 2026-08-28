@@ -23,7 +23,7 @@ model responses {
   listingid Int
   response  String
   accepted  Boolean? @default(false)
-  listings  listings @relation(fields: [listingid], references: [id])
+  listings  listings @relation(fields: [listingid], references: [id],onDelete:Cascade)
   users     users    @relation(fields: [userid], references: [id])
 
   @@id([userid, listingid])
@@ -45,8 +45,8 @@ model users {
 model skill_listing {
   listingid   Int
   skillid   Int
-  listings    listings  @relation(fields: [listingid], references: [id])
-  skills    skills  @relation(fields: [skillid], references: [id])
+  listings    listings  @relation(fields: [listingid], references: [id],onDelete:Cascade)
+  skills    skills  @relation(fields: [skillid], references: [id],onDelete:Cascade)
 
   @@id([listingid,skillid])
 }
