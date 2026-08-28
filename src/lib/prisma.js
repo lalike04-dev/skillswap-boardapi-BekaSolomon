@@ -6,7 +6,7 @@ import {
 
 import {
   PrismaClient
-} from "../generated/prisma/client";
+} from "../generated/prisma/client.ts";
 
 const adapter =
   new PrismaPg({

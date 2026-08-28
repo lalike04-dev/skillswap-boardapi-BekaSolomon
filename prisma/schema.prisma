@@ -12,10 +12,10 @@ model listings {
   id          Int         @id @default(autoincrement())
   title       String      @db.VarChar(255)
   description String
-  skillid     Int
   list_type   listing_type     
-  skills      skills      @relation(fields: [skillid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  skill_listing skill_listing[]
   responses   responses[]
+  @@unique([title,description])
 }
 
 model responses {
@@ -23,8 +23,8 @@ model responses {
   listingid Int
   response  String
   accepted  Boolean? @default(false)
-  listings  listings @relation(fields: [listingid], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users     users    @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  listings  listings @relation(fields: [listingid], references: [id])
+  users     users    @relation(fields: [userid], references: [id])
 
   @@id([userid, listingid])
 }
@@ -33,7 +33,7 @@ model skills {
   id          Int        @id @default(autoincrement())
   name        String     @unique
   description String     @db.VarChar(255)
-  listings    listings[]
+  skill_listing skill_listing[]
 }
 
 model users {
@@ -41,6 +41,14 @@ model users {
   name      String     @db.VarChar(100)
   email     String      @unique @db.VarChar(255)
   responses responses[]
+}
+model skill_listing {
+  listingid   Int
+  skillid   Int
+  listings    listings  @relation(fields: [listingid], references: [id])
+  skills    skills  @relation(fields: [skillid], references: [id])
+
+  @@id([listingid,skillid])
 }
 
 enum listing_type{
